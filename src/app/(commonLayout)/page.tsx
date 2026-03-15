@@ -2,7 +2,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Star } from "lucide-react";
+import {
+    Atom,
+    BookOpen,
+    Calculator,
+    CalendarCheck,
+    Code,
+    Globe,
+    Languages,
+    Search,
+    Star,
+    UserPlus,
+} from "lucide-react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -39,6 +50,66 @@ const tutors = [
         rating: 4.9,
         price: 22,
         image: "/images/tutor4.jpg",
+    },
+];
+
+const categories = [
+    {
+        name: "Mathematics",
+        icon: Calculator,
+        slug: "math",
+    },
+    {
+        name: "Science",
+        icon: Atom,
+        slug: "science",
+    },
+    {
+        name: "Programming",
+        icon: Code,
+        slug: "programming",
+    },
+    {
+        name: "Languages",
+        icon: Languages,
+        slug: "languages",
+    },
+    {
+        name: "Business",
+        icon: Globe,
+        slug: "business",
+    },
+    {
+        name: "General Studies",
+        icon: BookOpen,
+        slug: "general",
+    },
+];
+
+const steps = [
+    {
+        title: "Create an Account",
+        description:
+            "Register as a student or tutor and complete your profile in minutes.",
+        icon: UserPlus,
+    },
+    {
+        title: "Find the Right Tutor",
+        description:
+            "Browse tutors by subject, rating, and price to find the perfect match.",
+        icon: Search,
+    },
+    {
+        title: "Book a Session",
+        description:
+            "Choose a convenient time and book your tutoring session instantly.",
+        icon: CalendarCheck,
+    },
+    {
+        title: "Learn & Leave a Review",
+        description:
+            "Attend the session and share your experience by leaving a review.",
+        icon: Star,
     },
 ];
 
@@ -87,6 +158,7 @@ export default async function Home() {
             </section>
             {/* Hero Section ended */}
 
+            {/* Featured Tutor Sections Started */}
             <section className="py-20">
                 <div className="container max-w-7xl mx-auto px-4">
                     {/* Section Title */}
@@ -144,6 +216,96 @@ export default async function Home() {
                                 </CardContent>
                             </Card>
                         ))}
+                    </div>
+                </div>
+            </section>
+            {/* Featured Tutor Sections Ended */}
+
+            {/* Browse By Categories Section Started */}
+            <section className="py-20">
+                <div className="container max-w-7xl mx-auto px-4">
+                    {/* Title */}
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold">
+                            Browse by Categories
+                        </h2>
+                        <p className="text-muted-foreground mt-2">
+                            Find tutors by your favorite subject
+                        </p>
+                    </div>
+
+                    {/* Categories Grid */}
+                    <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-6">
+                        {categories.map((category) => {
+                            return (
+                                <Card
+                                    key={category.slug}
+                                    className="hover:shadow-lg transition cursor-pointer"
+                                >
+                                    <CardContent className="flex flex-col items-center justify-center gap-4 py-8">
+                                        <Avatar className="h-10 w-10">
+                                            <AvatarFallback>
+                                                {category.name.charAt(0)}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <p className="font-medium">
+                                            {category.name}
+                                        </p>
+
+                                        <Button
+                                            variant="secondary"
+                                            asChild
+                                            size="sm"
+                                        >
+                                            <Link
+                                                href={`/tutors?subject=${category.slug}`}
+                                            >
+                                                Explore
+                                            </Link>
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+            {/* Browse By Categories Section Ended */}
+
+            {/* How It Works Section Started */}
+            <section className="py-20 bg-muted/40">
+                <div className="container max-w-7xl mx-auto px-4">
+                    {/* Title */}
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold">How It Works</h2>
+                        <p className="text-muted-foreground mt-2">
+                            Start learning in just a few simple steps
+                        </p>
+                    </div>
+
+                    {/* Steps */}
+                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                        {steps.map((step, index) => {
+                            const Icon = step.icon;
+
+                            return (
+                                <Card key={index} className="text-center">
+                                    <CardContent className="flex flex-col items-center gap-4 py-10">
+                                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                                            <Icon className="h-6 w-6 text-primary" />
+                                        </div>
+
+                                        <h3 className="font-semibold text-lg">
+                                            {step.title}
+                                        </h3>
+
+                                        <p className="text-sm text-muted-foreground">
+                                            {step.description}
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
