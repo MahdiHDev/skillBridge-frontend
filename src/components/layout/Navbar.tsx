@@ -69,11 +69,7 @@ const Navbar = ({
         { title: "Home", url: "/" },
         { title: "About", url: "/about" },
         { title: "Browse Tutors", url: "/browse-tutors" },
-        { title: "Contact", url: "/contact" },
-        {
-            title: "Blog",
-            url: "/blog",
-        },
+        { title: "My Sessions", url: "/my-sessions" },
     ],
     auth = {
         login: { title: "Login", url: "/login" },
@@ -82,8 +78,13 @@ const Navbar = ({
     className,
 }: Navbar1Props) => {
     return (
-        <section className={cn("py-4", className)}>
-            <div className="container max-w-7xl mx-auto px-4">
+        <section
+            className={cn(
+                "py-4 shadow-[0_1px_4px_rgba(0,0,0,0.1)] dark:shadow-[0_2px_10px_rgba(255,255,255,0.1)]",
+                className,
+            )}
+        >
+            <div className="container max-w-7xl mx-auto px-4 ">
                 {/* Desktop Menu */}
                 <nav className="hidden items-center justify-between lg:flex">
                     <div className="flex items-center gap-10">
