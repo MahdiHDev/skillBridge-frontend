@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { Menu, User } from "lucide-react";
 
 import {
     Accordion,
@@ -26,6 +26,15 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { ModeToggle } from "./ModeToggle";
 
 interface MenuItem {
@@ -34,6 +43,13 @@ interface MenuItem {
     description?: string;
     icon?: React.ReactNode;
     items?: MenuItem[];
+}
+
+interface User {
+    name: string;
+    email: string;
+    image?: string | null;
+    role?: string;
 }
 
 interface Navbar1Props {
@@ -56,6 +72,7 @@ interface Navbar1Props {
             url: string;
         };
     };
+    user?: User | null;
 }
 
 const Navbar = ({
@@ -75,8 +92,73 @@ const Navbar = ({
         login: { title: "Login", url: "/login" },
         signup: { title: "Sign up", url: "/signup" },
     },
+    user = null,
+
     className,
 }: Navbar1Props) => {
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        // Option 2
+        await fetch(`${process.env.NEXT_PUBLIC_AUTH_URL}/sign-out`, {
+            method: "POST",
+            credentials: "include",
+        });
+        router.refresh();
+        setTimeout(() => router.push("/"), 100);
+    };
+
+    console.log("user data", user);
+    const getInitials = (name: string) =>
+        name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+
+    const ProfileDropdown = () => (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 rounded-full focus:outline-none focus:ring-2 focus:ring-ring">
+                    <Avatar className="h-8 w-8">
+                        <AvatarImage src={user?.image ?? ""} alt={user?.name} />
+                        <AvatarFallback className="text-xs">
+                            {getInitials(user?.name ?? "U")}
+                        </AvatarFallback>
+                    </Avatar>
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+                <div className="px-2 py-1.5">
+                    <p className="text-sm font-semibold">{user?.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                        {user?.email}
+                    </p>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                    <Link href="/profile">Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Link href="/my-sessions">My Sessions</Link>
+                </DropdownMenuItem>
+                {user?.role === "TUTOR" && (
+                    <DropdownMenuItem asChild>
+                        <Link href="/dashboard">Dashboard</Link>
+                    </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="text-red-500 focus:text-red-500 cursor-pointer"
+                >
+                    Logout
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+
     return (
         <section
             className={cn(
@@ -107,21 +189,33 @@ const Navbar = ({
                                 <NavigationMenuList>
                                     {menu.map((item) => renderMenuItem(item))}
                                 </NavigationMenuList>
+                                {user?.role === "TUTOR" && (
+                                    <NavigationMenuList asChild>
+                                        <Link href="/dashboard">Dashboard</Link>
+                                    </NavigationMenuList>
+                                )}
                             </NavigationMenu>
                         </div>
                     </div>
                     <div className="flex gap-2">
                         <ModeToggle />
-                        <Button asChild variant="outline" size="sm">
-                            <Link href={auth.login.url}>
-                                {auth.login.title}
-                            </Link>
-                        </Button>
-                        <Button asChild size="sm">
-                            <Link href={auth.signup.url}>
-                                {auth.signup.title}
-                            </Link>
-                        </Button>
+                        {user ? (
+                            <ProfileDropdown />
+                        ) : (
+                            <>
+                                {" "}
+                                <Button asChild variant="outline" size="sm">
+                                    <Link href={auth.login.url}>
+                                        {auth.login.title}
+                                    </Link>
+                                </Button>
+                                <Button asChild size="sm">
+                                    <Link href={auth.signup.url}>
+                                        {auth.signup.title}
+                                    </Link>
+                                </Button>
+                            </>
+                        )}
                     </div>
                 </nav>
 
@@ -175,19 +269,72 @@ const Navbar = ({
                                         {menu.map((item) =>
                                             renderMobileMenuItem(item),
                                         )}
+
+                                        {user?.role === "TUTOR" && (
+                                            <Link
+                                                href="/dashboard"
+                                                className="text-md font-semibold"
+                                            >
+                                                Dashboard
+                                            </Link>
+                                        )}
                                     </Accordion>
 
                                     <div className="flex flex-col gap-3">
-                                        <Button asChild variant="outline">
-                                            <Link href={auth.login.url}>
-                                                {auth.login.title}
-                                            </Link>
-                                        </Button>
-                                        <Button asChild>
-                                            <Link href={auth.signup.url}>
-                                                {auth.signup.title}
-                                            </Link>
-                                        </Button>
+                                        {user && (
+                                            <div className="flex items-center gap-3 border-b pb-4">
+                                                <Avatar className="h-10 w-10">
+                                                    <AvatarImage
+                                                        src={user.image ?? ""}
+                                                    />
+                                                    <AvatarFallback>
+                                                        {getInitials(user.name)}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div>
+                                                    <p className="font-semibold text-sm">
+                                                        {user.name}
+                                                    </p>
+                                                    <p className="text-xs text-muted-foreground">
+                                                        {user.email}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                        <div className="flex flex-col gap-3">
+                                            {user ? (
+                                                <Button
+                                                    variant="destructive"
+                                                    onClick={handleLogout}
+                                                >
+                                                    Logout
+                                                </Button>
+                                            ) : (
+                                                <>
+                                                    <Button
+                                                        asChild
+                                                        variant="outline"
+                                                    >
+                                                        <Link
+                                                            href={
+                                                                auth.login.url
+                                                            }
+                                                        >
+                                                            {auth.login.title}
+                                                        </Link>
+                                                    </Button>
+                                                    <Button asChild>
+                                                        <Link
+                                                            href={
+                                                                auth.signup.url
+                                                            }
+                                                        >
+                                                            {auth.signup.title}
+                                                        </Link>
+                                                    </Button>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </SheetContent>

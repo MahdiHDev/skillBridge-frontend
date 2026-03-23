@@ -1,108 +1,7 @@
-// "use client";
-
-// import { useParams, useSearchParams } from "next/navigation";
-// import { useState } from "react";
-
-// export default function BookingPage() {
-//     const params = useParams();
-//     const searchParams = useSearchParams();
-
-//     const tutorCategoryId = params.categoryId as string;
-//     const tutorId = searchParams.get("tutor");
-
-//     const [sessionDate, setSessionDate] = useState("");
-//     const [startTime, setStartTime] = useState("");
-//     const [endTime, setEndTime] = useState("");
-
-//     const handleSubmit = (e: React.FormEvent) => {
-//         e.preventDefault();
-
-//         const body = {
-//             tutorCategoryId,
-//             sessionDate,
-//             startTime,
-//             endTime,
-//         };
-
-//         console.log("BOOKING REQUEST:", body);
-
-//         // 👉 later you will call API here
-//         // await fetch('/api/booking', { method: 'POST', body: JSON.stringify(body) })
-//     };
-
-//     return (
-//         <section className="py-20">
-//             <div className="max-w-xl mx-auto px-4">
-//                 <div className="border rounded-xl p-8 space-y-6 shadow-sm">
-//                     <h1 className="text-2xl font-bold text-center">
-//                         Book a Session
-//                     </h1>
-
-//                     {/* INFO */}
-//                     <div className="text-sm text-muted-foreground text-center">
-//                         <p>Category ID: {tutorCategoryId}</p>
-//                         <p>Tutor ID: {tutorId}</p>
-//                     </div>
-
-//                     {/* FORM */}
-//                     <form onSubmit={handleSubmit} className="space-y-5">
-//                         {/* DATE */}
-//                         <div>
-//                             <label className="block text-sm mb-1">
-//                                 Select Date
-//                             </label>
-//                             <input
-//                                 type="date"
-//                                 value={sessionDate}
-//                                 onChange={(e) => setSessionDate(e.target.value)}
-//                                 required
-//                                 className="w-full border rounded-md p-2"
-//                             />
-//                         </div>
-
-//                         {/* START TIME */}
-//                         <div>
-//                             <label className="block text-sm mb-1">
-//                                 Start Time
-//                             </label>
-//                             <input
-//                                 type="time"
-//                                 value={startTime}
-//                                 onChange={(e) => setStartTime(e.target.value)}
-//                                 required
-//                                 className="w-full border rounded-md p-2"
-//                             />
-//                         </div>
-
-//                         {/* END TIME */}
-//                         <div>
-//                             <label className="block text-sm mb-1">
-//                                 End Time
-//                             </label>
-//                             <input
-//                                 type="time"
-//                                 value={endTime}
-//                                 onChange={(e) => setEndTime(e.target.value)}
-//                                 required
-//                                 className="w-full border rounded-md p-2"
-//                             />
-//                         </div>
-
-//                         {/* SUBMIT */}
-//                         <button
-//                             type="submit"
-//                             className="w-full bg-black text-white py-2 rounded-md"
-//                         >
-//                             Confirm Booking
-//                         </button>
-//                     </form>
-//                 </div>
-//             </div>
-//         </section>
-//     );
-// }
 "use client";
 
+import { Calendar } from "@/components/ui/calendar";
+import { formatTime } from "@/lib/formatTime";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -135,7 +34,35 @@ const availabilityData = [
         endDate: "2026-06-30T00:00:00.000Z",
         isActive: true,
     },
+    {
+        id: "e9882f3a-5150-4bc7-a4ca-83eb259131f5",
+        tutorProfileId: "7d7a9ef7-9214-4fc5-a719-102b41b432f6",
+        dayOfWeek: "MON",
+        startTime: "1970-01-01T16:00:00.000Z",
+        endTime: "1970-01-01T18:00:00.000Z",
+        startDate: "2026-01-01T00:00:00.000Z",
+        endDate: "2026-06-30T00:00:00.000Z",
+        isActive: true,
+        createdAt: "2026-03-20T19:47:23.179Z",
+    },
 ];
+
+const isDateAvailable = (date: Date) => {
+    const dayMap = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    const day = dayMap[date.getDay()];
+
+    return availabilityData.some((slot) => {
+        const slotStart = new Date(slot.startDate);
+        const slotEnd = new Date(slot.endDate);
+
+        return (
+            slot.isActive &&
+            slot.dayOfWeek === day &&
+            date >= slotStart &&
+            date <= slotEnd
+        );
+    });
+};
 
 export default function BookingPage() {
     const params = useParams();
@@ -149,10 +76,14 @@ export default function BookingPage() {
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
 
-    // 👉 convert ISO → HH:mm
-    const formatTime = (iso: string) => {
-        const date = new Date(iso);
-        return date.toISOString().substring(11, 16);
+    const [date, setDate] = useState<Date | undefined>(new Date());
+
+    const formatDateLocal = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
     };
 
     // 👉 get day from date
@@ -204,36 +135,53 @@ export default function BookingPage() {
     };
 
     return (
-        <section className="py-20">
+        <section className="py-20 dark:bg-[#09090b]">
             <div className="max-w-2xl mx-auto px-4">
-                <div className="border rounded-xl p-8 space-y-8 shadow-sm">
+                <div className="md:border rounded-xl p-8 space-y-8 md:shadow-sm dark:bg-[#1e1e22]">
                     <h1 className="text-2xl font-bold text-center">
                         Book a Session
                     </h1>
 
-                    {/* DATE */}
-                    <div>
-                        <label className="block text-sm mb-2">
-                            Select Date
-                        </label>
-                        <input
-                            type="date"
-                            value={sessionDate}
-                            onChange={(e) => setSessionDate(e.target.value)}
-                            className="w-full border rounded-md p-2"
-                        />
-                    </div>
+                    {/* <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        className="rounded-lg border w-1/2 mx-auto"
+                    /> */}
+
+                    <Calendar
+                        mode="single"
+                        className="rounded-lg border w-full sm:w-2/3 mx-auto "
+                        selected={
+                            sessionDate ? new Date(sessionDate) : undefined
+                        }
+                        onSelect={(date) => {
+                            if (!date) return;
+
+                            if (!isDateAvailable(date)) return;
+                            setSessionDate(formatDateLocal(date));
+                        }}
+                        disabled={(date) => !isDateAvailable(date)}
+                        modifiers={{
+                            available: (date) => isDateAvailable(date),
+                        }}
+                        modifiersClassNames={{
+                            available: " font-bold text-green-500",
+                        }}
+                    />
 
                     {/* SLOTS */}
                     <div className="space-y-3">
-                        <h3 className="font-semibold">Available Slots</h3>
+                        <h3 className="font-semibold text-center">
+                            Available Slots
+                        </h3>
 
                         {filteredSlots.length === 0 ? (
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-gray-500 text-center">
                                 No slots available for selected date
                             </p>
                         ) : (
-                            <div className="flex flex-wrap gap-3">
+                            <div className="flex flex-wrap justify-center gap-3">
                                 {filteredSlots.map((slot) => (
                                     <button
                                         key={slot.id}
@@ -281,3 +229,12 @@ export default function BookingPage() {
         </section>
     );
 }
+
+// return (
+//   <Calendar
+//     mode="single"
+//     selected={date}
+//     onSelect={setDate}
+//     className="rounded-lg border"
+//   />
+// )

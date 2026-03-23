@@ -1,4 +1,7 @@
 export const formatTime = (iso: string) => {
-    const date = new Date(iso);
-    return date.toISOString().substring(11, 16);
+    return new Date(iso).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    });
 };

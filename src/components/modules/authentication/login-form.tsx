@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { useForm } from "@tanstack/react-form";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -31,6 +32,7 @@ export function LoginForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
+    const router = useRouter();
     const form = useForm({
         defaultValues: {
             email: "",
@@ -50,6 +52,9 @@ export function LoginForm({
                 }
 
                 toast.success("User Logged in Successfully", { id: toastId });
+
+                router.refresh();
+                router.push("/");
             } catch (error) {
                 toast.error("Something went wrong, please try again.", {
                     id: toastId,
