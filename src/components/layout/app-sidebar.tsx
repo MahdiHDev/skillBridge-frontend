@@ -11,8 +11,58 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 // This is sample data.
+
+type NavItem = { title: string; url: string };
+type NavGroup = { title: string; items: NavItem[] };
+
+const adminNav: NavGroup[] = [
+    { title: "Overview", items: [{ title: "Dashboard", url: "/dashboard" }] },
+    {
+        title: "User Management",
+        items: [
+            { title: "All Users", url: "/dashboard/users" },
+            { title: "All Tutors", url: "/dashboard/tutors" },
+        ],
+    },
+    {
+        title: "Content",
+        items: [{ title: "Subjects", url: "/dashboard/subjects" }],
+    },
+    {
+        title: "Bookings",
+        items: [{ title: "All Bookings", url: "/dashboard/bookings" }],
+    },
+];
+
+const tutorNav: NavGroup[] = [
+    {
+        title: "Overview",
+        items: [{ title: "Dashboard", url: "/dashboard" }],
+    },
+    {
+        title: "Profile",
+        items: [
+            { title: "My Profile", url: "/dashboard/profile" },
+            { title: "Availability", url: "/dashboard/availability" },
+            { title: "Sessions", url: "/dashboard/sessions" },
+        ],
+    },
+    {
+        title: "Bookings",
+        items: [
+            { title: "My Bookings", url: "/dashboard/bookings" },
+            { title: "Upcoming", url: "/dashboard/bookings/upcoming" },
+        ],
+    },
+    {
+        title: "Reviews",
+        items: [{ title: "My Reviews", url: "/dashboard/reviews" }],
+    },
+];
+
 const data = {
     versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
     navMain: [
@@ -33,23 +83,36 @@ const data = {
     ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+    role: "ADMIN" | "TUTOR";
+    pathname?: string; // pass current path for active state
+}
+
+export function AppSidebar({ role, pathname, ...props }: AppSidebarProps) {
+    console.log("role: ", role);
+    const navGroups = role === "ADMIN" ? adminNav : tutorNav;
+
     return (
         <Sidebar {...props}>
             <SidebarContent>
+                <h1 className="text-center p-4 font-bold text-lg md:text-xl">
+                    Skill Bridge
+                </h1>
                 {/* We create a SidebarGroup for each parent. */}
-                {data.navMain.map((item) => (
-                    <SidebarGroup key={item.title}>
-                        <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+                {navGroups.map((group) => (
+                    <SidebarGroup key={group.title}>
+                        <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
                         <SidebarGroupContent>
                             <SidebarMenu>
-                                {item.items.map((item) => (
+                                {group.items.map((item) => (
                                     <SidebarMenuItem key={item.title}>
                                         <SidebarMenuButton
                                             asChild
                                             // isActive={item.isActive}
                                         >
-                                            <a href={item.url}>{item.title}</a>
+                                            <Link href={item.url}>
+                                                {item.title}
+                                            </Link>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 ))}
