@@ -42,12 +42,14 @@ export async function proxy(request: NextRequest) {
 
     let isAuthenticated = false;
     let isAdmin = false;
+    let isTutor = false;
 
     const { data } = await userService.getSession();
 
     if (data) {
         isAuthenticated = true;
         isAdmin = data.user.role === Roles.admin;
+        isTutor = data.user.role === Roles.tutor;
     }
 
     //* ✅ 1. Prevent logged-in users from visiting login/register
@@ -72,6 +74,23 @@ export async function proxy(request: NextRequest) {
     //* ✅ 3. Optional: Admin protection
     if (pathname.startsWith("/admin-dashboard") && !isAdmin) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
+    //* ✅ 4. Redirect /dashboard root — never let users land here directly
+    if (pathname === "/dashboard") {
+        if (!isAuthenticated) {
+            return NextResponse.redirect(new URL("/login", request.url));
+        }
+        if (isAdmin) {
+            return NextResponse.redirect(
+                new URL("/dashboard/admin", request.url),
+            );
+        }
+        if (isTutor) {
+            return NextResponse.redirect(
+                new URL("/dashboard/tutor", request.url),
+            );
+        }
     }
 
     return NextResponse.next();

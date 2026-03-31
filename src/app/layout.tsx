@@ -1,3 +1,4 @@
+import { Providers } from "@/components/providers";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -28,16 +29,19 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body
                 className={`${geistSans.className} ${geistMono.variable} antialiased`}
+                suppressHydrationWarning
             >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    {children}
-                    <Toaster richColors />
-                </ThemeProvider>
+                <Providers>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        {children}
+                        <Toaster richColors />
+                    </ThemeProvider>
+                </Providers>
             </body>
         </html>
     );

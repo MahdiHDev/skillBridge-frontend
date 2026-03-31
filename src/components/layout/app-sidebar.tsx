@@ -19,47 +19,50 @@ type NavItem = { title: string; url: string };
 type NavGroup = { title: string; items: NavItem[] };
 
 const adminNav: NavGroup[] = [
-    { title: "Overview", items: [{ title: "Dashboard", url: "/dashboard" }] },
+    {
+        title: "Overview",
+        items: [{ title: "Dashboard", url: "/dashboard/admin" }],
+    },
     {
         title: "User Management",
         items: [
-            { title: "All Users", url: "/dashboard/users" },
-            { title: "All Tutors", url: "/dashboard/tutors" },
+            { title: "All Users", url: "/dashboard/admin/users" },
+            { title: "All Tutors", url: "/dashboard/admin/tutors" },
         ],
     },
     {
         title: "Content",
-        items: [{ title: "Subjects", url: "/dashboard/subjects" }],
+        items: [{ title: "Subjects", url: "/dashboard/admin/subjects" }],
     },
     {
         title: "Bookings",
-        items: [{ title: "All Bookings", url: "/dashboard/bookings" }],
+        items: [{ title: "All Bookings", url: "/dashboard/admin/bookings" }],
     },
 ];
 
 const tutorNav: NavGroup[] = [
     {
         title: "Overview",
-        items: [{ title: "Dashboard", url: "/dashboard" }],
+        items: [{ title: "Dashboard", url: "/dashboard/tutor" }],
     },
     {
         title: "Profile",
         items: [
-            { title: "My Profile", url: "/dashboard/profile" },
-            { title: "Availability", url: "/dashboard/availability" },
-            { title: "Sessions", url: "/dashboard/sessions" },
+            { title: "My Profile", url: "/dashboard/tutor/profile" },
+            { title: "Create Sessions", url: "/dashboard/tutor/sessions" },
+            { title: "Availability", url: "/dashboard/tutor/availability" },
         ],
     },
     {
         title: "Bookings",
         items: [
-            { title: "My Bookings", url: "/dashboard/bookings" },
-            { title: "Upcoming", url: "/dashboard/bookings/upcoming" },
+            { title: "My Bookings", url: "/dashboard/tutor/bookings" },
+            { title: "Upcoming", url: "/dashboard/tutor/bookings/upcoming" },
         ],
     },
     {
         title: "Reviews",
-        items: [{ title: "My Reviews", url: "/dashboard/reviews" }],
+        items: [{ title: "My Reviews", url: "/dashboard/tutor/reviews" }],
     },
 ];
 

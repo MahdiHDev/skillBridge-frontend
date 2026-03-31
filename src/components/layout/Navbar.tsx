@@ -189,7 +189,8 @@ const Navbar = ({
                                 <NavigationMenuList>
                                     {menu.map((item) => renderMenuItem(item))}
                                 </NavigationMenuList>
-                                {user?.role === "TUTOR" && (
+                                {(user?.role === "TUTOR" ||
+                                    user?.role === "ADMIN") && (
                                     <NavigationMenuList asChild>
                                         <Link href="/dashboard">Dashboard</Link>
                                     </NavigationMenuList>

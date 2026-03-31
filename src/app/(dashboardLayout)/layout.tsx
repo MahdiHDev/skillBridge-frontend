@@ -10,12 +10,8 @@ import { userService } from "@/services/user.service";
 
 export default async function DashboardLayout({
     children,
-    admin,
-    tutor,
 }: {
     children: React.ReactNode;
-    admin: React.ReactNode;
-    tutor: React.ReactNode;
 }) {
     const data = await userService.getSession();
     const user = data?.data?.user;
@@ -47,12 +43,7 @@ export default async function DashboardLayout({
                     </Breadcrumb> */}
                     <DynamicBreadcrumb />
                 </header>
-                <div className="flex flex-1 flex-col gap-4 p-4">
-                    {/* Render slot based on role */}
-                    {user.role === "ADMIN" && admin}
-                    {user.role === "TUTOR" && tutor}
-                    {children}
-                </div>
+                <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
             </SidebarInset>
         </SidebarProvider>
     );
