@@ -49,7 +49,7 @@ const tutorNav: NavGroup[] = [
         title: "Profile",
         items: [
             { title: "My Profile", url: "/dashboard/tutor/profile" },
-            { title: "Create Sessions", url: "/dashboard/tutor/sessions" },
+            { title: "Sessions", url: "/dashboard/tutor/sessions" },
             { title: "Availability", url: "/dashboard/tutor/availability" },
         ],
     },

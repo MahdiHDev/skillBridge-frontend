@@ -23,7 +23,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateTeaching } from "@/hooks/useCreateTeaching";
+import { useCreateTeaching } from "@/hooks/teaching/useCreateTeaching";
 import { useSubjects } from "@/hooks/useSubjects";
 import { cn } from "@/lib/utils";
 import { TeachingLevel } from "@/services/teaching.service";
@@ -408,17 +408,27 @@ export default function CreateTeachingPage() {
                                     </Field>
                                 )}
                             />
+                            <div className="flex gap-3">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className=""
+                                    onClick={() =>
+                                        router.push("/dashboard/tutor/sessions")
+                                    }
+                                >
+                                    Cancel
+                                </Button>
 
-                            <Button
-                                form="create-teaching-form"
-                                type="submit"
-                                className="w-full"
-                                disabled={isPending}
-                            >
-                                {isPending
-                                    ? "Creating..."
-                                    : "Create Teaching Subject"}
-                            </Button>
+                                <Button
+                                    form="create-teaching-form"
+                                    type="submit"
+                                    className=""
+                                    disabled={isPending}
+                                >
+                                    {isPending ? "Creating..." : "Create"}
+                                </Button>
+                            </div>
                         </FieldGroup>
                     </form>
                 </CardContent>

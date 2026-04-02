@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useDeleteTeaching } from "@/hooks/useDeleteTeaching";
-import { useGetTeachings } from "@/hooks/useGetTeaching";
+import { useDeleteTeaching } from "@/hooks/teaching/useDeleteTeaching";
+import { useGetTeachings } from "@/hooks/teaching/useGetTeaching";
 import { TeachingSession } from "@/services/teaching.service";
 import {
     BookOpen,

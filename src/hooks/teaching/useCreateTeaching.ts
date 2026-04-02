@@ -12,7 +12,7 @@ export const useCreateTeaching = () => {
             teachingService.createTeaching(data),
         onSuccess: () => {
             toast.success("Teaching subject created successfully");
-            queryClient.invalidateQueries({ queryKey: ["subjects"] });
+            queryClient.invalidateQueries({ queryKey: ["teachings"] });
         },
         onError: (error: any) => {
             toast.error(

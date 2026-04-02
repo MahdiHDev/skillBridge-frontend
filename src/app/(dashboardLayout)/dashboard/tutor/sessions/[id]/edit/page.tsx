@@ -24,13 +24,11 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useGetTeachings } from "@/hooks/useGetTeaching";
-import { useSubjects } from "@/hooks/useSubjects";
-import { useUpdateTeaching } from "@/hooks/useUpdateTeaching";
+import { useGetTeachings } from "@/hooks/teaching/useGetTeaching";
+import { useUpdateTeaching } from "@/hooks/teaching/useUpdateTeaching";
 import { TeachingLevel } from "@/services/teaching.service";
 import { useForm } from "@tanstack/react-form";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 
 const editTeachingSchema = z.object({
@@ -51,26 +49,6 @@ export default function EditTeachingPage() {
     const session = data?.data?.find((s) => s.id === id);
 
     const { mutateAsync, isPending } = useUpdateTeaching(id);
-    const { data: subjectsData, isLoading } = useSubjects();
-
-    const subjects = subjectsData?.data ?? [];
-
-    const [open, setOpen] = useState(false);
-    const [inputValue, setInputValue] = useState("");
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        const handler = (e: MouseEvent) => {
-            if (
-                containerRef.current &&
-                !containerRef.current.contains(e.target as Node)
-            ) {
-                setOpen(false);
-            }
-        };
-        document.addEventListener("mousedown", handler);
-        return () => document.removeEventListener("mousedown", handler);
-    }, []);
 
     const form = useForm({
         defaultValues: {
