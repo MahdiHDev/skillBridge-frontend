@@ -101,6 +101,8 @@ export default function CreateAvailaiblity() {
                 return;
             }
 
+            console.log(value, slots, "submitted data");
+
             await mutateAsync({
                 startDate: value.startDate,
                 endDate: value.endDate,

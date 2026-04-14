@@ -1,11 +1,9 @@
-export function formatDate(dateString: string) {
-    const date = new Date(dateString);
-
-    return date.toLocaleString("en-BD", {
+export const formatDate = (isoString: string): string => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString("en-US", {
+        timeZone: "UTC",
         year: "numeric",
         month: "short",
         day: "numeric",
-        // hour: "2-digit",
-        // minute: "2-digit",
     });
-}
+};

@@ -258,7 +258,7 @@ export default async function Home() {
                                             size="sm"
                                         >
                                             <Link
-                                                href={`/tutors?subject=${category.slug}`}
+                                                href={`/browse-tutors?subject=${category.slug}`}
                                             >
                                                 Explore
                                             </Link>

@@ -20,7 +20,6 @@ import {
     useEditAvailability,
     useGetAvailability,
 } from "@/hooks/useAvailability";
-import { formatTime } from "@/lib/formatTime";
 import { useForm } from "@tanstack/react-form";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -35,6 +34,13 @@ const availabilitySchema = z.object({
     endDate: z.string().min(1, "End date is required"),
 });
 
+const extractUTCTime = (iso: string) => {
+    const date = new Date(iso);
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`; // "16:00"
+};
+
 export default function page() {
     const { mutateAsync, isPending } = useEditAvailability();
     const router = useRouter();
@@ -48,8 +54,10 @@ export default function page() {
             dayOfWeek: session?.dayOfWeek || "MON",
             startDate: session?.startDate.split("T")[0] || "",
             endDate: session?.endDate.split("T")[0] || "",
-            startTime: session?.startTime ? formatTime(session.startTime) : "",
-            endTime: session?.endTime ? formatTime(session.endTime) : "",
+            startTime: session?.startTime
+                ? extractUTCTime(session.startTime)
+                : "",
+            endTime: session?.endTime ? extractUTCTime(session.endTime) : "",
         },
         validators: { onSubmit: availabilitySchema },
         onSubmit: async ({ value }) => {

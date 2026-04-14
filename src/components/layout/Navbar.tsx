@@ -143,6 +143,13 @@ const Navbar = ({
                 <DropdownMenuItem asChild>
                     <Link href="/my-sessions">My Sessions</Link>
                 </DropdownMenuItem>
+
+                {user?.role === "STUDENT" && (
+                    <DropdownMenuItem asChild>
+                        <Link href="/tutorProfile/create">Be a Tutor</Link>
+                    </DropdownMenuItem>
+                )}
+
                 {user?.role === "TUTOR" && (
                     <DropdownMenuItem asChild>
                         <Link href="/dashboard">Dashboard</Link>

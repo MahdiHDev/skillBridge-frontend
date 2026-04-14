@@ -1,5 +1,5 @@
-import { tutors } from "@/data/tutor";
 import { formatDate } from "@/lib/dateFormat";
+import { tutorServerService } from "@/services/tutor.server.service";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -12,9 +12,9 @@ type Props = {
 export default async function TutorProfilePage({ params }: Props) {
     const { id } = await params;
 
-    const tutor = tutors.find((t) => t.id === id);
-    const reviews = tutor?.reviews || [];
-    console.log(reviews);
+    const tutor = await tutorServerService.getTutorById(id);
+
+    const reviews = tutor?.reviews ?? [];
 
     if (!tutor) {
         return notFound();
@@ -29,7 +29,8 @@ export default async function TutorProfilePage({ params }: Props) {
                         {/* PROFILE */}
                         <div className="text-center space-y-4">
                             <h1 className="text-3xl font-bold">
-                                {tutor.user.name}
+                                {/* {tutor?.user.name ?? "tutor"} */}
+                                {tutor.user?.name ?? "Tutor"}
                             </h1>
 
                             <p className="text-muted-foreground">
@@ -52,7 +53,7 @@ export default async function TutorProfilePage({ params }: Props) {
                                 {tutor.tutorCategories.map((cat) => (
                                     <div
                                         key={cat.id}
-                                        className="border rounded-lg p-6 text-center space-y-3 shadow-sm w-[350px]"
+                                        className="border rounded-lg p-6 text-center space-y-3 shadow-sm w-87.5"
                                     >
                                         <p className="font-semibold text-lg">
                                             {cat.subject.name}
@@ -69,7 +70,7 @@ export default async function TutorProfilePage({ params }: Props) {
                                         </p>
 
                                         <Link
-                                            href={`/booking/${cat.id}?tutor=${tutor.id}`}
+                                            href={`/booking/${cat.id}?tutorName=${tutor.user?.name ?? "Tutor"}&subject=${cat.subject.name}&tutorProfileId=${tutor.id}`}
                                             className="inline-block mt-3 bg-black text-white dark:bg-stone-800 hover:text-gray-200 px-5 py-2 rounded-md text-sm duration-300"
                                         >
                                             Book Session

@@ -64,6 +64,10 @@ const tutorNav: NavGroup[] = [
         title: "Reviews",
         items: [{ title: "My Reviews", url: "/dashboard/tutor/reviews" }],
     },
+    {
+        title: "Home",
+        items: [{ title: "Home", url: "/" }],
+    },
 ];
 
 const data = {

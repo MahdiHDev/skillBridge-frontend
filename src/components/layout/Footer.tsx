@@ -73,10 +73,10 @@ export default function Footer() {
                         </li>
                         <li>
                             <Link
-                                href="/tutor-sign-up"
+                                href="/tutorProfile/create"
                                 className="dark:hover:text-white hover:text-gray-700 transition"
                             >
-                                Sign Up as Tutor
+                                Wanna Be a Tutor
                             </Link>
                         </li>
                         <li>

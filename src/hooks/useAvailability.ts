@@ -19,8 +19,10 @@ export const useGetAvailability = () =>
 export const useCreateAvailability = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (data: CreateAvailabilityPayload) =>
-            availabilityService.create(data),
+        mutationFn: (data: CreateAvailabilityPayload) => {
+            console.log("creating availability with data", data);
+            return availabilityService.create(data);
+        },
         onSuccess: () => {
             toast.success("Availability saved");
             queryClient.invalidateQueries({ queryKey: availabilityKeys.all });
@@ -68,5 +70,18 @@ export const useDeleteAvailability = () => {
                 error?.response?.data?.message ?? "Something went wrong",
             );
         },
+    });
+};
+
+export const useGetAvailableDates = (
+    tutorProfileId: string,
+    year: number,
+    month: number,
+) => {
+    return useQuery({
+        queryKey: ["available-dates", tutorProfileId, year, month],
+        queryFn: () =>
+            availabilityService.availableDates(tutorProfileId, year, month),
+        enabled: !!tutorProfileId && !!year && !!month,
     });
 };

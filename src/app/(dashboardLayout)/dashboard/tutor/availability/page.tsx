@@ -111,13 +111,7 @@ function SlotCard({
                         </Button>
                     </Link>
                 </div>
-                <AlertDialogContent
-                    className="max-w-sm"
-                    style={{
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                    }}
-                >
+                <AlertDialogContent className="max-w-sm">
                     <AlertDialogHeader>
                         <AlertDialogTitle>Remove slot?</AlertDialogTitle>
                         <AlertDialogDescription>

@@ -1,40 +1,19 @@
 "use client";
 
 import { Textarea } from "@/components/ui/textarea";
+import { useMySessions } from "@/hooks/use-Booking";
+import { formatDate } from "@/lib/dateFormat";
+import { TweleveFormatTime } from "@/lib/formatTime";
 import { Rate } from "antd";
-import { useEffect, useState } from "react";
-
-// 👉 dummy data
-const data = [
-    {
-        id: "da35ffa7-ab8f-405e-bbc1-cc7960ac7a16",
-        sessionDate: "2026-03-18T00:00:00.000Z",
-        startTime: "1970-01-01T16:00:00.000Z",
-        endTime: "1970-01-01T18:00:00.000Z",
-        price: 91,
-        status: "COMPLETED",
-        meetingLink: "https://meet.google.com/kth-mvav-pgw",
-        tutorCategory: {
-            subject: { name: "docker containerization" },
-            tutorProfile: { user: { name: "Mahdi Hussain" } },
-        },
-    },
-];
+import { useState } from "react";
 
 export default function MySessionsPage() {
-    const [sessions, setSessions] = useState<any[]>([]);
+    const { data: mySessionsData, isLoading } = useMySessions();
+    const sessions: any[] = mySessionsData?.data ?? [];
+
+    // const [sessions, setSessions] = useState<any[]>([]);
     const [reviews, setReviews] = useState<{ [key: string]: string }>({}); // sessionId -> review
     const [rating, setRating] = useState(0);
-
-    useEffect(() => {
-        // 👉 replace with API call later
-        setSessions(data);
-    }, []);
-
-    const formatDate = (dateStr: string) =>
-        new Date(dateStr).toLocaleDateString();
-    const formatTime = (iso: string) =>
-        new Date(iso).toISOString().substring(11, 16);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -69,6 +48,14 @@ export default function MySessionsPage() {
         // Optionally clear the review input
         setReviews((prev) => ({ ...prev, [sessionId]: "" }));
     };
+
+    if (isLoading) {
+        return (
+            <div className="py-20">
+                <p className="text-center text-gray-500">Loading...</p>
+            </div>
+        );
+    }
 
     return (
         <section className="py-20">
@@ -118,8 +105,11 @@ export default function MySessionsPage() {
                                     <div>
                                         <p className="text-gray-500">Time</p>
                                         <p>
-                                            {formatTime(session.startTime)} -{" "}
-                                            {formatTime(session.endTime)}
+                                            {TweleveFormatTime(
+                                                session.startTime,
+                                            )}{" "}
+                                            -{" "}
+                                            {TweleveFormatTime(session.endTime)}
                                         </p>
                                     </div>
                                 </div>

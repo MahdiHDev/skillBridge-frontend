@@ -54,4 +54,14 @@ export const availabilityService = {
         const res = await apiClient.delete(`/availability/delete/${id}`);
         return res.data;
     },
+    availableDates: async (
+        tutorProfileId: string,
+        year: number,
+        month: number, // 1-indexed
+    ) => {
+        const res = await apiClient.get(
+            `/availability/${tutorProfileId}/available-dates?year=${year}&month=${month}`,
+        );
+        return res.data;
+    },
 };
