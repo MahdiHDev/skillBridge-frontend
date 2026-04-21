@@ -5,6 +5,7 @@ import {
     GetTeachingSessionsParams,
     TeachingSessionsResponse,
 } from "@/types/booking.types";
+import { GetBookingsParams, GetBookingsResponse } from "@/types/subject.types";
 
 export const bookingService = {
     createBooking: async (data: createBookingPayload) => {
@@ -23,6 +24,15 @@ export const bookingService = {
             {
                 params,
             },
+        );
+        return data;
+    },
+    getAll: async (
+        params: GetBookingsParams = {},
+    ): Promise<GetBookingsResponse> => {
+        const { data } = await apiClient.get<GetBookingsResponse>(
+            "/booking/getAllBooking",
+            { params },
         );
         return data;
     },

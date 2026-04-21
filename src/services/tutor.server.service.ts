@@ -10,8 +10,8 @@ export const tutorServerService = {
         const cookieStore = await cookies();
         const url = `${API_URL}/tutor/${id}`;
 
-        console.log("Fetching tutor URL:", url);
-        console.log("Cookies:", cookieStore.toString()); // 👈 check if cookies exist
+        // console.log("Fetching tutor URL:", url);
+        // console.log("Cookies:", cookieStore.toString()); // 👈 check if cookies exist
 
         const res = await fetch(url, {
             headers: {

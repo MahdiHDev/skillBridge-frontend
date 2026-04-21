@@ -44,4 +44,9 @@ export const tutorService = {
     createTutorProfile: async function (bio: string): Promise<void> {
         await apiClient.post("/tutor/create", { bio });
     },
+
+    getTutorProfile: async () => {
+        const { data } = await apiClient.get("/tutor/getMyProfile"); // adjust endpoint
+        return data;
+    },
 };

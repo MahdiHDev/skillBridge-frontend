@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/dateFormat";
 import { tutorServerService } from "@/services/tutor.server.service";
 import Link from "next/link";
@@ -15,6 +16,7 @@ export default async function TutorProfilePage({ params }: Props) {
     const tutor = await tutorServerService.getTutorById(id);
 
     const reviews = tutor?.reviews ?? [];
+    console.log("tutor", tutor);
 
     if (!tutor) {
         return notFound();
@@ -53,7 +55,7 @@ export default async function TutorProfilePage({ params }: Props) {
                                 {tutor.tutorCategories.map((cat) => (
                                     <div
                                         key={cat.id}
-                                        className="border rounded-lg p-6 text-center space-y-3 shadow-sm w-87.5"
+                                        className="border rounded-lg p-6 text-center space-y-3 shadow-sm w-87.5 dark:bg-stone-800"
                                     >
                                         <p className="font-semibold text-lg">
                                             {cat.subject.name}
@@ -71,7 +73,7 @@ export default async function TutorProfilePage({ params }: Props) {
 
                                         <Link
                                             href={`/booking/${cat.id}?tutorName=${tutor.user?.name ?? "Tutor"}&subject=${cat.subject.name}&tutorProfileId=${tutor.id}`}
-                                            className="inline-block mt-3 bg-black text-white dark:bg-stone-800 hover:text-gray-200 px-5 py-2 rounded-md text-sm duration-300"
+                                            className="inline-block mt-3 bg-black text-white dark:bg-stone-500 hover:text-gray-200 px-5 py-2 rounded-md text-sm duration-300"
                                         >
                                             Book Session
                                         </Link>
@@ -114,8 +116,18 @@ export default async function TutorProfilePage({ params }: Props) {
                                                 </span>
                                             </div>
 
+                                            {/* Subject  */}
+
+                                            <Badge>
+                                                {
+                                                    review?.booking
+                                                        ?.tutorCategory?.subject
+                                                        ?.name
+                                                }
+                                            </Badge>
+
                                             {/* Comment */}
-                                            <p className="text-gray-600 dark:text-gray-300 text-sm mb-6">
+                                            <p className="text-gray-600 dark:text-gray-300 text-sm my-4 px-2">
                                                 &quot;
                                                 {review.comment}
                                                 &quot;

@@ -61,7 +61,14 @@ export async function proxy(request: NextRequest) {
     }
 
     //* ✅ 2. Protect private routes
-    const protectedRoutes = ["/dashboard", "/admin-dashboard", "/booking"];
+    const protectedRoutes = [
+        "/dashboard",
+        "/admin-dashboard",
+        "/booking",
+        "/dashboard/tutor",
+        "/dashboard/admin",
+        "/tutorProfile",
+    ];
 
     const isProtected = protectedRoutes.some((route) =>
         pathname.startsWith(route),

@@ -2,18 +2,21 @@
 
 import { Textarea } from "@/components/ui/textarea";
 import { useMySessions } from "@/hooks/use-Booking";
+import { useCreateReview } from "@/hooks/useReview";
 import { formatDate } from "@/lib/dateFormat";
 import { TweleveFormatTime } from "@/lib/formatTime";
 import { Rate } from "antd";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function MySessionsPage() {
     const { data: mySessionsData, isLoading } = useMySessions();
+    const { mutateAsync, isPending } = useCreateReview();
     const sessions: any[] = mySessionsData?.data ?? [];
 
     // const [sessions, setSessions] = useState<any[]>([]);
     const [reviews, setReviews] = useState<{ [key: string]: string }>({}); // sessionId -> review
-    const [rating, setRating] = useState(0);
+    const [ratings, setRatings] = useState<{ [key: string]: number }>({}); // sessionId -> rating
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -32,18 +35,32 @@ export default function MySessionsPage() {
         setReviews((prev) => ({ ...prev, [sessionId]: value }));
     };
 
-    const handleChange = (value: number) => {
-        console.log("Selected rating:", value);
-        setRating(value); // update state
+    const handleRatingChange = (sessionId: string, value: number) => {
+        setRatings((prev) => ({ ...prev, [sessionId]: value }));
     };
 
-    const submitReview = (sessionId: string) => {
+    const submitReview = async (sessionId: string) => {
         const reviewText = reviews[sessionId];
-        if (!reviewText) return alert("Please write a review first!");
+        if (!reviewText) return toast.error("Please write a review first!");
+        const reviewRating = ratings[sessionId];
+        if (!reviewRating) return toast.error("Please select a rating!");
 
         // 👉 Replace this with your API call
-        console.log("Submitting review for session", sessionId, reviewText);
-        alert("Review submitted! ✅");
+        console.log(
+            "Submitting review for session",
+            sessionId,
+            reviewRating,
+            reviewText,
+        );
+        await mutateAsync({
+            bookingId: sessionId,
+            rating: reviewRating,
+            comment: reviewText,
+        });
+
+        toast.success("Review submitted successfully!");
+
+        // alert("Review submitted! ✅");
 
         // Optionally clear the review input
         setReviews((prev) => ({ ...prev, [sessionId]: "" }));
@@ -142,33 +159,45 @@ export default function MySessionsPage() {
                                 )}
 
                                 {/* REVIEW FORM (only for COMPLETED sessions) */}
-                                {session.status === "COMPLETED" && (
-                                    <div className="mt-4">
-                                        <Rate
-                                            onChange={handleChange}
-                                            value={rating}
-                                        />
-                                        <Textarea
-                                            value={reviews[session.id] || ""}
-                                            onChange={(e) =>
-                                                handleReviewChange(
-                                                    session.id,
-                                                    e.target.value,
-                                                )
-                                            }
-                                            placeholder="Leave a review for your tutor..."
-                                            className="w-full border rounded-md p-2 text-sm mt-2"
-                                        />
-                                        <button
-                                            onClick={() =>
-                                                submitReview(session.id)
-                                            }
-                                            className="mt-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 text-sm cursor-pointer"
-                                        >
-                                            Submit Review
-                                        </button>
-                                    </div>
-                                )}
+                                {/* {session.status === "COMPLETED" && ( */}
+                                {session.status === "COMPLETED" &&
+                                    !session.review && (
+                                        <div className="mt-4">
+                                            <Rate
+                                                onChange={(value) =>
+                                                    handleRatingChange(
+                                                        session.id,
+                                                        value,
+                                                    )
+                                                }
+                                                value={ratings[session.id]}
+                                            />
+                                            <Textarea
+                                                value={
+                                                    reviews[session.id] || ""
+                                                }
+                                                onChange={(e) =>
+                                                    handleReviewChange(
+                                                        session.id,
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                placeholder="Leave a review for your tutor..."
+                                                className="w-full border rounded-md p-2 text-sm mt-2"
+                                            />
+                                            <button
+                                                onClick={() =>
+                                                    submitReview(session.id)
+                                                }
+                                                disabled={isPending}
+                                                className="mt-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 text-sm cursor-pointer"
+                                            >
+                                                {isPending
+                                                    ? "Submitting..."
+                                                    : "Submit Review"}
+                                            </button>
+                                        </div>
+                                    )}
                             </div>
                         ))}
                     </div>

@@ -68,3 +68,10 @@ export const useApproveTutor = () => {
         },
     });
 };
+
+export const useTutorProfile = () => {
+    return useQuery({
+        queryKey: ["tutor-profile"],
+        queryFn: () => tutorService.getTutorProfile(),
+    });
+};

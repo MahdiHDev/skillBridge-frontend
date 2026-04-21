@@ -37,7 +37,10 @@ export const useUpdateTeaching = (id: string) => {
             teachingService.update(id, data),
         onSuccess: () => {
             toast.success("Teaching Session Updated Successfully");
-            queryClient.invalidateQueries({ queryKey: ["teachings"] });
+            queryClient.invalidateQueries({
+                queryKey: ["teachings"],
+            });
+            queryClient.invalidateQueries({ queryKey: ["tutor-profile"] });
         },
     });
 };

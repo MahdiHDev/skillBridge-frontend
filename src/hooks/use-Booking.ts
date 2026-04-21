@@ -4,6 +4,7 @@ import {
     createBookingPayload,
     GetTeachingSessionsParams,
 } from "@/types/booking.types";
+import { GetBookingsParams } from "@/types/subject.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -67,6 +68,7 @@ export const useUpdateBookingStatus = () => {
         onSuccess: () => {
             toast.success("Booking status updated");
             queryClient.invalidateQueries({ queryKey: ["sessions"] });
+            queryClient.invalidateQueries({ queryKey: ["my-sessions"] });
             queryClient.invalidateQueries({ queryKey: ["teaching-sessions"] });
         },
         onError: (error: any) => {
@@ -76,3 +78,9 @@ export const useUpdateBookingStatus = () => {
         },
     });
 };
+
+export const useBookings = (params: GetBookingsParams = {}) =>
+    useQuery({
+        queryKey: ["bookings", params],
+        queryFn: () => bookingService.getAll(params),
+    });

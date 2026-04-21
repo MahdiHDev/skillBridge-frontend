@@ -138,7 +138,12 @@ const Navbar = ({
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                    <Link href="/profile">Profile</Link>
+                    {user?.role === "TUTOR" ? (
+                        <Link href="/tutorProfile">Profile</Link>
+                    ) : (
+                        <Link href="/studentProfile">Profile</Link>
+                    )}
+                    {/* <Link href="/profile">Profile</Link> */}
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                     <Link href="/my-sessions">My Sessions</Link>

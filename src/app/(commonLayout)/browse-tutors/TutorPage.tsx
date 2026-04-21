@@ -203,10 +203,10 @@ export default function TutorsPage() {
                 {/* TUTORS GRID */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {tutors.map((tutor) => {
-                        const category = tutor.tutorCategories[0];
+                        const categories = tutor.tutorCategories;
 
                         return (
-                            <Card key={tutor.id}>
+                            <Card key={tutor.id} className="flex flex-col">
                                 <CardHeader className="flex flex-row items-center gap-3">
                                     <Avatar>
                                         <AvatarFallback>
@@ -226,14 +226,24 @@ export default function TutorsPage() {
                                     </div>
                                 </CardHeader>
 
-                                <CardContent className="space-y-3">
-                                    <Badge>{category.subject.name}</Badge>
+                                <CardContent className="flex flex-col flex-1 space-y-3">
+                                    <div className="flex flex-wrap flex-1 gap-2 pb-2">
+                                        {categories.map(
+                                            (category: TutorCategory) => (
+                                                <Badge
+                                                    key={category.subject.name}
+                                                >
+                                                    {category?.subject.name}
+                                                </Badge>
+                                            ),
+                                        )}
+                                    </div>
 
-                                    <p className="text-sm text-muted-foreground">
-                                        ${category.hourlyRate} / hour
-                                    </p>
+                                    {/* <p className="text-sm text-muted-foreground">
+                                        ${category?.hourlyRate} / hour
+                                    </p> */}
 
-                                    <p className="text-sm line-clamp-2">
+                                    <p className="text-sm line-clamp-2 flex-1">
                                         {tutor.bio}
                                     </p>
 
@@ -244,6 +254,47 @@ export default function TutorsPage() {
                                     </Button>
                                 </CardContent>
                             </Card>
+                            // <Card key={tutor.id} className="flex flex-col">
+                            //     <CardHeader className="flex flex-row items-center gap-3">
+                            //         <Avatar>
+                            //             <AvatarFallback>
+                            //                 {tutor.user.name.charAt(0)}
+                            //             </AvatarFallback>
+                            //         </Avatar>
+                            //         <div>
+                            //             <h3 className="font-semibold">
+                            //                 {tutor.user.name}
+                            //             </h3>
+                            //             <div className="flex items-center text-sm text-muted-foreground">
+                            //                 <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
+                            //                 {tutor.averageRating}
+                            //             </div>
+                            //         </div>
+                            //     </CardHeader>
+
+                            //     <CardContent className="flex flex-col flex-1 space-y-3">
+                            //         <div className="flex flex-wrap gap-2">
+                            //             {categories.map(
+                            //                 (category: TutorCategory) => (
+                            //                     <Badge
+                            //                         key={category.subject.name}
+                            //                     >
+                            //                         {category.subject.name}
+                            //                     </Badge>
+                            //                 ),
+                            //             )}
+                            //         </div>
+                            //         <p className="text-sm line-clamp-2 flex-1">
+                            //             {tutor.bio}
+                            //         </p>{" "}
+                            //         {/* ✅ flex-1 pushes button down */}
+                            //         <Button asChild className="w-full">
+                            //             <Link href={`/tutors/${tutor.id}`}>
+                            //                 View Profile
+                            //             </Link>
+                            //         </Button>
+                            //     </CardContent>
+                            // </Card>
                         );
                     })}
                 </div>
@@ -262,7 +313,7 @@ export default function TutorsPage() {
                                 setPage(1);
                             }}
                         >
-                            <SelectTrigger className="w-[120px]">
+                            <SelectTrigger className="w-30">
                                 <SelectValue />
                             </SelectTrigger>
 
