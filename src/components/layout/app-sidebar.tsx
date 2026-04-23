@@ -38,6 +38,10 @@ const adminNav: NavGroup[] = [
         title: "Bookings",
         items: [{ title: "All Bookings", url: "/dashboard/admin/bookings" }],
     },
+    {
+        title: "Home",
+        items: [{ title: "Home", url: "/" }],
+    },
 ];
 
 const tutorNav: NavGroup[] = [

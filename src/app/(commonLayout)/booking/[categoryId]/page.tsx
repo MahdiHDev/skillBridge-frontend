@@ -3,7 +3,7 @@
 import { Calendar } from "@/components/ui/calendar";
 import { useCreateBooking } from "@/hooks/use-Booking";
 import {
-    useGetAvailability,
+    useGetAvailabilityById,
     useGetAvailableDates,
 } from "@/hooks/useAvailability";
 import { toHHMM, TweleveFormatTime } from "@/lib/formatTime";
@@ -25,7 +25,7 @@ export default function BookingPage() {
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
 
-    const { data, isLoading } = useGetAvailability();
+    const { data, isLoading } = useGetAvailabilityById(tutorProfileId);
     const availabilityData: any[] = data?.data ?? [];
 
     const { data: availableDatesData } = useGetAvailableDates(
@@ -33,7 +33,6 @@ export default function BookingPage() {
         currentMonth.getFullYear(),
         currentMonth.getMonth() + 1,
     );
-    console.log("availableDatesData:", availableDatesData);
 
     // ✅ data is { success, message, data: string[] }
     const availableDateSet = new Set<string>(
@@ -66,16 +65,26 @@ export default function BookingPage() {
             .toUpperCase();
     };
 
-    // filter slots when date changes
     useEffect(() => {
         if (!sessionDate || availabilityData.length === 0) return;
 
         const selectedDay = getDayOfWeek(sessionDate);
 
         const filtered = availabilityData.filter((slot) => {
-            // ✅ compare date strings, not Date objects
-            const slotStartStr = slot.startDate.split("T")[0]; // "2026-01-01"
-            const slotEndStr = slot.endDate.split("T")[0]; // "2026-06-30"
+            const slotStartStr = slot.startDate.split("T")[0];
+            const slotEndStr = slot.endDate.split("T")[0];
+
+            console.log("comparing:", {
+                slotDay: slot.dayOfWeek,
+                selectedDay,
+                match: slot.dayOfWeek === selectedDay,
+                isActive: slot.isActive,
+                sessionDate,
+                slotStartStr,
+                slotEndStr,
+                inRange:
+                    sessionDate >= slotStartStr && sessionDate <= slotEndStr,
+            });
 
             return (
                 slot.isActive &&

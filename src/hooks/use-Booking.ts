@@ -53,6 +53,12 @@ export const useTeachingSessions = (params: GetTeachingSessionsParams) => {
     });
 };
 
+export const useUpcomingSessions = () =>
+    useQuery({
+        queryKey: ["upcoming-sessions"],
+        queryFn: bookingService.getUpcoming,
+    });
+
 export const useUpdateBookingStatus = () => {
     const queryClient = useQueryClient();
     return useMutation({

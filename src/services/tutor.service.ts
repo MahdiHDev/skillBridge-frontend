@@ -49,4 +49,14 @@ export const tutorService = {
         const { data } = await apiClient.get("/tutor/getMyProfile"); // adjust endpoint
         return data;
     },
+    updateTutorProfile: async (payload: {
+        tutorProfileId: string;
+        bio: string;
+    }) => {
+        const { data } = await apiClient.put(
+            "/tutor/updateTutorProfile",
+            payload,
+        );
+        return data;
+    },
 };

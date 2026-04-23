@@ -23,6 +23,13 @@ export const useCreateReview = () => {
     });
 };
 
+export const useGetReviews = (tutorProfileId: string) =>
+    useQuery({
+        queryKey: ["reviews", tutorProfileId],
+        queryFn: () => reviewService.getByTutorProfileId(tutorProfileId),
+        enabled: !!tutorProfileId,
+    });
+
 export const useMyReviews = () => {
     return useQuery({
         queryKey: ["my-reviews"],
@@ -35,7 +42,12 @@ export const useDeleteReview = () => {
     return useMutation({
         mutationFn: reviewService.deleteReview,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["my-reviews"] });
+            queryClient.invalidateQueries({
+                queryKey: ["my-reviews"],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["reviews"],
+            });
         },
     });
 };

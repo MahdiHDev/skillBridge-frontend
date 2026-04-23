@@ -36,6 +36,11 @@ export const bookingService = {
         );
         return data;
     },
+    getUpcoming: async () => {
+        const { data } = await apiClient.get("/booking/upcoming");
+        return data;
+    },
+
     updateBookingStatus: async (
         id: string,
         data: { status: BookingStatus; meetingLink?: string },

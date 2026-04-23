@@ -39,6 +39,12 @@ export const availabilityService = {
         const res = await apiClient.get("/availability/me");
         return res.data;
     },
+    getByTutorId: async (
+        tutorProfileId: string,
+    ): Promise<{ data: AvailabilitySlot[] }> => {
+        const res = await apiClient.get(`/availability/${tutorProfileId}`);
+        return res.data;
+    },
 
     create: async (data: CreateAvailabilityPayload) => {
         const res = await apiClient.post("/availability/create", data);

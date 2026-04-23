@@ -6,6 +6,7 @@ import { useCreateReview } from "@/hooks/useReview";
 import { formatDate } from "@/lib/dateFormat";
 import { TweleveFormatTime } from "@/lib/formatTime";
 import { Rate } from "antd";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -77,7 +78,17 @@ export default function MySessionsPage() {
     return (
         <section className="py-20">
             <div className="max-w-5xl mx-auto px-4 space-y-8">
-                <h1 className="text-3xl font-bold text-center">My Sessions</h1>
+                <div className="flex flex-col items-center gap-2 md:gap-4">
+                    <h1 className="text-3xl font-bold text-center">
+                        My Sessions
+                    </h1>
+                    <Link
+                        className="py-2 px-4 border rounded-md text-sm  hover:bg-gray-100 duration-300"
+                        href={"my-sessions/upcoming"}
+                    >
+                        See Upcoming Session
+                    </Link>
+                </div>
 
                 {sessions.length === 0 ? (
                     <p className="text-center text-muted-foreground">

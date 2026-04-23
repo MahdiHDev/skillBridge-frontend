@@ -75,3 +75,20 @@ export const useTutorProfile = () => {
         queryFn: () => tutorService.getTutorProfile(),
     });
 };
+
+export const useUpdateTutorProfile = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (data: { tutorProfileId: string; bio: string }) =>
+            tutorService.updateTutorProfile(data),
+        onSuccess: () => {
+            toast.success("Profile updated successfully");
+            queryClient.invalidateQueries({ queryKey: ["tutor-profile"] });
+        },
+        onError: (error: any) => {
+            toast.error(
+                error?.response?.data?.message ?? "Something went wrong",
+            );
+        },
+    });
+};

@@ -16,6 +16,14 @@ export const useGetAvailability = () =>
         queryFn: availabilityService.getAll,
     });
 
+// hooks/useAvailability.ts
+export const useGetAvailabilityById = (tutorProfileId: string) =>
+    useQuery({
+        queryKey: ["availability", tutorProfileId],
+        queryFn: () => availabilityService.getByTutorId(tutorProfileId),
+        enabled: !!tutorProfileId,
+    });
+
 export const useCreateAvailability = () => {
     const queryClient = useQueryClient();
     return useMutation({

@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/api-client";
-import { createReviewPayload } from "@/types/review.types";
+import { createReviewPayload, GetReviewsResponse } from "@/types/review.types";
 
 export const reviewService = {
     createReview: async (data: createReviewPayload) => {
@@ -11,6 +11,14 @@ export const reviewService = {
         return res.data;
     },
 
+    getByTutorProfileId: async (
+        tutorProfileId: string,
+    ): Promise<GetReviewsResponse> => {
+        const { data } = await apiClient.get<GetReviewsResponse>(
+            `/review/${tutorProfileId}`,
+        );
+        return data;
+    },
     deleteReview: async (reviewId: string) => {
         const res = await apiClient.delete(`/review/${reviewId}`);
         return res.data;
