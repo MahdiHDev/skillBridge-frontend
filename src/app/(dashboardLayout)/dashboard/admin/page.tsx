@@ -61,9 +61,11 @@ export default function AdminDashboardPage() {
         );
     }
 
-    const totalStudents = users.filter((u: any) => u.role === "STUDENT").length;
-    const totalTutors = users.filter((u: any) => u.role === "TUTOR").length;
-    const bannedUsers = users.filter((u: any) => u.status === "BANNED").length;
+    const totalStudents = users.filter(
+        (u: any) => u?.role === "STUDENT",
+    ).length;
+    const totalTutors = users.filter((u: any) => u?.role === "TUTOR").length;
+    const bannedUsers = users.filter((u: any) => u?.status === "BANNED").length;
 
     const stats = [
         {

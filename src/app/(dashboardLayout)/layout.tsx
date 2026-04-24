@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/sidebar";
 import { userService } from "@/services/user.service";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardLayout({
     children,
 }: {

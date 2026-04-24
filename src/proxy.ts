@@ -35,7 +35,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { Roles } from "./constants/roles";
-import { userService } from "./services/user.service";
 
 export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
@@ -44,12 +43,25 @@ export async function proxy(request: NextRequest) {
     let isAdmin = false;
     let isTutor = false;
 
-    const { data } = await userService.getSession();
+    try {
+        const sessionRes = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/get-session`,
+            {
+                headers: {
+                    cookie: request.headers.get("cookie") ?? "",
+                },
+            },
+        );
 
-    if (data) {
-        isAuthenticated = true;
-        isAdmin = data.user.role === Roles.admin;
-        isTutor = data.user.role === Roles.tutor;
+        const session = await sessionRes.json();
+
+        if (session?.user) {
+            isAuthenticated = true;
+            isAdmin = session.user.role === Roles.admin;
+            isTutor = session.user.role === Roles.tutor;
+        }
+    } catch {
+        // session fetch failed, treat as unauthenticated
     }
 
     //* ✅ 1. Prevent logged-in users from visiting login/register

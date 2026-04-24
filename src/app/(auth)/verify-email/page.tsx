@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/card";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 type Status = "verifying" | "success" | "error";
 
-export default function VerifyEmailPage() {
+export function VerifyEmailContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const token = searchParams.get("token");
@@ -125,5 +125,19 @@ export default function VerifyEmailPage() {
                 </CardContent>
             </Card>
         </div>
+    );
+}
+
+export default function VerifyEmailPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen flex items-center justify-center">
+                    <div className="h-8 w-8 rounded-full border-4 border-primary border-t-transparent animate-spin" />
+                </div>
+            }
+        >
+            <VerifyEmailContent />
+        </Suspense>
     );
 }
